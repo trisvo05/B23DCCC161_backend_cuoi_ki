@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Application } from './entities/application.entity';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
+import { NotificationService } from '../notification/notification.service';
 // import { SubjectCombination, Subjectcombination } from './entities/subjectcombination.entity';
 
 @Injectable()
@@ -11,10 +12,16 @@ export class ApplicationsService {
   constructor(
     @InjectRepository(Application)
     private readonly Repo: Repository<Application>,
+    private readonly notificationService: NotificationService,
   ) {}
   async create(createDto: CreateApplicationDto): Promise<Application> {
     const data = this.Repo.create(createDto);
-    return this.Repo.save(data);
+    const savedData = this.Repo.save(data);
+    await this.notificationService.sendApplicationSubmittedEmail(
+      data.user.email,
+      data.user.fullName,
+    );
+    return savedData;
   }
 
   async findAll(): Promise<Application[]> {
