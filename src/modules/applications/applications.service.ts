@@ -16,16 +16,22 @@ export class ApplicationsService {
   ) {}
   async create(createDto: CreateApplicationDto): Promise<Application> {
     const data = this.Repo.create(createDto);
+    console.log('data', data);
     const savedData = this.Repo.save(data);
+
     await this.notificationService.sendApplicationSubmittedEmail(
-      data.user.email,
-      data.user.fullName,
+      // Đây là email trùng với email của người login -> gửi mail cho người đó , tìm cách xác thực để biết đây là ai
+      'minhtrivo2005gg@gmail.com',
+      // Tên người trùng với tên của người login , xem chi tiết ở phần service notificationnotification
+      'Trí Võ',
     );
     return savedData;
   }
 
   async findAll(): Promise<Application[]> {
-    return this.Repo.find();
+    return this.Repo.find({
+      // relations: ['user', 'major', 'combination'],
+    });
   }
 
   async findOne(id: number): Promise<Application> {
