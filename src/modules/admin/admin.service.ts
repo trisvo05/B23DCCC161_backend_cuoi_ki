@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import {
+  Application,
+  ApplicationStatus,
+} from '../applications/entities/application.entity';
+import { Repository } from 'typeorm';
 @Injectable()
 export class AdminService {
-  create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
-  }
+  constructor(
+    @InjectRepository(Application)
+    private readonly applicationRepo: Repository<Application>,
+    // @InjectRepository(User)
+    // private readonly userRepo: Repository<User>,
+  ) {}
 
-  findAll() {
-    return `This action returns all admin`;
-  }
+  // LẤY THỐNG KÊ ( đếm số lượng hồ sơ )
+  // test case xong thì thấy dùng async await hiện tại thì chưa hợp lí
+  async getStats() {
+    return {
+      // đếm số lượng hồ sơ
+      totalApplications: await this.applicationRepo.count(),
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
-  }
-
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+      //  Đếm hồ sơ theo từng trạng thái
+      pending: await this.applicationRepo.count({
+        where: { status: ApplicationStatus.PENDING },
+      }),
+      approved: await this.applicationRepo.count({
+        where: { status: ApplicationStatus.APPROVED },
+      }),
+      rejected: await this.applicationRepo.count({
+        where: { status: ApplicationStatus.REJECTED },
+      }),
+    };
   }
 }

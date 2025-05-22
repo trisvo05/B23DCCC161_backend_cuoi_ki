@@ -19,6 +19,7 @@ import { Document } from './modules/documents/entities/document.entity';
 import { ConfigModule } from '@nestjs/config';
 import { SubjectcombinationModule } from './modules/subjectcombination/subjectcombination.module';
 import { SubjectCombination } from './modules/subjectcombination/entities/subjectcombination.entity';
+// import { Admin } from 'typeorm';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -53,6 +54,7 @@ import { SubjectCombination } from './modules/subjectcombination/entities/subjec
     AuthModule,
     ApplicationsModule,
     SubjectcombinationModule,
+    // AdminModule,
   ],
 })
 export class AppModule {}
