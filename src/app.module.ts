@@ -27,11 +27,11 @@ import { SubjectCombination } from './modules/subjectcombination/entities/subjec
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '127.0.0.1',
+      host: '',
       port: 3306,
-      username: 'root',
-      password: 'dauphuthanhkim00',
-      database: 'thuchanhweb',
+      username: '',
+      password: '',
+      database: '',
       entities: [
         User,
         School,
