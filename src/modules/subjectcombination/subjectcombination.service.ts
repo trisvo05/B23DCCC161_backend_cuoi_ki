@@ -1,27 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Application } from './entities/application.entity';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
 // import { SubjectCombination, Subjectcombination } from './entities/subjectcombination.entity';
+import { CreateSubjectcombinationDto } from './dto/create-subjectcombination.dto';
+import { UpdateSubjectcombinationDto } from './dto/update-subjectcombination.dto';
+import { SubjectCombination } from './entities/subjectcombination.entity';
 
 @Injectable()
-export class ApplicationsService {
+export class subjectcombinationService {
   constructor(
-    @InjectRepository(Application)
-    private readonly Repo: Repository<Application>,
+    @InjectRepository(SubjectCombination)
+    private readonly Repo: Repository<SubjectCombination>,
   ) {}
-  async create(createDto: CreateApplicationDto): Promise<Application> {
+  async create(
+    createDto: CreateSubjectcombinationDto,
+  ): Promise<SubjectCombination> {
     const data = this.Repo.create(createDto);
     return this.Repo.save(data);
   }
 
-  async findAll(): Promise<Application[]> {
+  async findAll(): Promise<SubjectCombination[]> {
     return this.Repo.find();
   }
 
-  async findOne(id: number): Promise<Application> {
+  async findOne(id: number): Promise<SubjectCombination> {
     const user = await this.Repo.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`Không tìm thấy user với id ${id}`);
@@ -30,10 +32,10 @@ export class ApplicationsService {
   }
   async update(
     id: number,
-    updateApllicationDto: UpdateApplicationDto,
-  ): Promise<Application> {
+    updateSubjectCombinationDto: UpdateSubjectcombinationDto,
+  ): Promise<SubjectCombination> {
     await this.findOne(id); // Kiểm tra tồn tại
-    await this.Repo.update(id, updateApllicationDto);
+    await this.Repo.update(id, updateSubjectCombinationDto);
     return this.findOne(id); // Trả về bản ghi mới sau update
   }
 

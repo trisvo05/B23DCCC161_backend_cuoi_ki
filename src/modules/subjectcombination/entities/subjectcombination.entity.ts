@@ -1,6 +1,5 @@
 import { MajorCombination } from 'src/modules/majors/entities/major-combination.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-// import { MajorCombination } from './major-combination.entity';
 
 @Entity('subject_combinations')
 export class SubjectCombination {

@@ -1,6 +1,7 @@
 import { Document } from 'src/modules/documents/entities/document.entity';
 import { Major } from 'src/modules/majors/entities/major.entity';
-import { SubjectCombination } from 'src/modules/subjectcombinations/entities/subjectcombination.entity';
+import { SubjectCombination } from 'src/modules/subjectcombination/entities/subjectcombination.entity';
+// import { SubjectCombination } from 'src/modules/subjectcombinations/entities/subjectcombination.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import {
   Entity,
