@@ -31,6 +31,7 @@ export class ApplicationsService {
   async findAll(): Promise<Application[]> {
     return this.Repo.find({
       // relations: ['user', 'major', 'combination'],
+      relations: ['user'],
     });
   }
 
