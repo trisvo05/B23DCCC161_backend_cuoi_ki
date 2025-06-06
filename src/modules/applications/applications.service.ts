@@ -1,10 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from './entities/application.entity';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
 import { NotificationService } from '../notification/notification.service';
+import { User } from '../users/entities/user.entity';
+import { Major } from '../majors/entities/major.entity';
+import { SubjectCombination } from '../subjectcombination/entities/subjectcombination.entity';
+import { MajorCombination } from '../majors/entities/major-combination.entity';
 // import { SubjectCombination, Subjectcombination } from './entities/subjectcombination.entity';
 
 @Injectable()
@@ -13,25 +21,63 @@ export class ApplicationsService {
     @InjectRepository(Application)
     private readonly Repo: Repository<Application>,
     private readonly notificationService: NotificationService,
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
+    @InjectRepository(Major)
+    private readonly majorRepo: Repository<Major>,
+    @InjectRepository(SubjectCombination)
+    private readonly combinationsMajor: Repository<MajorCombination>,
   ) {}
-  async create(createDto: CreateApplicationDto): Promise<Application> {
-    const data = this.Repo.create(createDto);
-    console.log('data', data);
-    const savedData = this.Repo.save(data);
+  async create(dto: CreateApplicationDto): Promise<Application> {
+    const user = await this.userRepo.findOne({ where: { id: dto.userId } });
+    if (!user) throw new NotFoundException('User not found');
 
-    await this.notificationService.sendApplicationSubmittedEmail(
-      // Đây là email trùng với email của người login -> gửi mail cho người đó , tìm cách xác thực để biết đây là ai
-      'minhtrivo2005gg@gmail.com',
-      // Tên người trùng với tên của người login , xem chi tiết ở phần service notificationnotification
-      'Trí Võ',
-    );
-    return savedData;
+    const major = await this.majorRepo.findOne({
+      where: { id: dto.majorId },
+      relations: ['combinations'],
+    });
+    if (!major) throw new NotFoundException('Major not found');
+
+    const combination = await this.combinationsMajor.findOne({
+      where: { id: dto.combinationId },
+    });
+    if (!combination) throw new NotFoundException('Combination not found');
+
+    // const isValid = major.combinations.some(
+    //   c => c.combination.id === combination.id,
+    // );
+    // if (!isValid)
+    //   throw new NotFoundException(
+    //     'Combination does not belong to selected Major',
+    //   );
+
+    try {
+      const data = this.Repo.create({
+        user,
+        major,
+        combination,
+        personalInfo: dto.personalInfo,
+        score: dto.score,
+        priorityObject: dto.priorityObject,
+      });
+      // console.log('Data to be saved:', data);
+      const savedData = await this.Repo.save(data);
+
+      await this.notificationService.sendApplicationSubmittedEmail(
+        'minhtrivo2005gg@gmail.com',
+        'Trí Võ',
+      );
+
+      return savedData;
+    } catch (error) {
+      console.error('Lỗi khi lưu application:', error);
+      throw new InternalServerErrorException('Không thể tạo application');
+    }
   }
 
   async findAll(): Promise<Application[]> {
     return this.Repo.find({
-      // relations: ['user', 'major', 'combination'],
-      relations: ['user'],
+      relations: ['user', 'major', 'combination'],
     });
   }
 

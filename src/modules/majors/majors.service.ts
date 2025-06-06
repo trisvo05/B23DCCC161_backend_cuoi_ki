@@ -54,11 +54,16 @@ export class MajorCombinationService {
   }
 
   async findAll(): Promise<MajorCombination[]> {
-    return this.Repo.find();
+    return this.Repo.find({
+      relations: ['major', 'combination'], // Lấy thông tin major và combination liên quan
+    });
   }
 
   async findOne(id: number): Promise<MajorCombination> {
-    const user = await this.Repo.findOneBy({ id });
+    const user = await this.Repo.findOne({
+      where: { major: { id } },
+      relations: ['major', 'combination'],
+    });
     if (!user) {
       throw new NotFoundException(`Không tìm thấy user với id ${id}`);
     }
