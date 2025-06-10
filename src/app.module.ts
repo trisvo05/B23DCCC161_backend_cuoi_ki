@@ -10,6 +10,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ApplicationsModule } from './modules/applications/applications.module';
 import { User } from './modules/users/entities/user.entity';
+import { Admin } from './modules/admin/entities/admin.entity'; // ✅ THÊM DÒNG NÀY
 import { School } from './modules/schools/entities/school.entity';
 import { Application } from './modules/applications/entities/application.entity';
 import { Major } from './modules/majors/entities/major.entity';
@@ -19,12 +20,11 @@ import { Document } from './modules/documents/entities/document.entity';
 import { ConfigModule } from '@nestjs/config';
 import { SubjectcombinationModule } from './modules/subjectcombination/subjectcombination.module';
 import { SubjectCombination } from './modules/subjectcombination/entities/subjectcombination.entity';
-// import { Admin } from 'typeorm';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Tự động dùng được ở tất cả module
-      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -35,6 +35,7 @@ import { SubjectCombination } from './modules/subjectcombination/entities/subjec
       database: 'railway',
       entities: [
         User,
+        Admin, // ✅ THÊM DÒNG NÀY
         School,
         Application,
         Major,
@@ -54,7 +55,6 @@ import { SubjectCombination } from './modules/subjectcombination/entities/subjec
     AuthModule,
     ApplicationsModule,
     SubjectcombinationModule,
-    // AdminModule,
   ],
 })
 export class AppModule {}
