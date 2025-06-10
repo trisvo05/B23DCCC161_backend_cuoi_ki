@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: 'ptit-admission-system-jwt-secret-2024', // Hardcode cho học tập
+      secretOrKey: 'online-admission-system-jwt-secret-2024',
     });
   }
 

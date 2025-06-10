@@ -13,7 +13,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     TypeOrmModule.forFeature([Admin, User]),
     PassportModule,
     JwtModule.register({
-      secret: 'ptit-admission-system-jwt-secret-2024',
+      secret: 'online-admission-system-jwt-secret-2024',
       signOptions: { expiresIn: '24h' },
     }),
   ],
