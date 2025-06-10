@@ -5,13 +5,14 @@ import {
   ApplicationStatus,
 } from '../applications/entities/application.entity';
 import { Repository } from 'typeorm';
+import { Major } from '../majors/entities/major.entity';
 @Injectable()
 export class AdminService {
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepo: Repository<Application>,
-    // @InjectRepository(User)
-    // private readonly userRepo: Repository<User>,
+    @InjectRepository(Major)
+    private readonly majorRepo: Repository<Major>,
   ) {}
 
   // LẤY THỐNG KÊ ( đếm số lượng hồ sơ )
@@ -31,6 +32,18 @@ export class AdminService {
       rejected: await this.applicationRepo.count({
         where: { status: ApplicationStatus.REJECTED },
       }),
+
+      // count total majors
+      majorStats: await this.majorRepo.count(),
+
+      // count applications by school
+      // applicationsBySchool: await this.applicationRepo
+      //   .createQueryBuilder('application')
+      //   .select('application.school', 'school')
+      //   .addSelect('COUNT(application.id)', 'count')
+      //   .groupBy('application.school')
+      //   .getRawMany(),
+      // count applications by status
     };
   }
 }

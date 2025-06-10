@@ -20,7 +20,7 @@ export class subjectcombinationService {
   }
 
   async findAll(): Promise<SubjectCombination[]> {
-    return this.Repo.find();
+    return this.Repo.find(); // Lấy thông tin major và combination liên quan
   }
 
   async findOne(id: number): Promise<SubjectCombination> {

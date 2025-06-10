@@ -77,7 +77,7 @@ export class ApplicationsService {
 
   async findAll(): Promise<Application[]> {
     return this.Repo.find({
-      relations: ['user', 'major', 'combination'],
+      relations: ['user', 'school', 'major', 'combination', 'documents'],
     });
   }
 
@@ -100,5 +100,15 @@ export class ApplicationsService {
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
     await this.Repo.remove(user);
+  }
+  async updateStatus(id: number, status: string): Promise<Application> {
+    const application = await this.Repo.findOne({ where: { id } });
+
+    if (!application) {
+      throw new NotFoundException(`Hồ sơ với ID ${id} không tồn tại`);
+    }
+
+    application.status = status as any; // Cast to ApplicationStatus if imported, e.g. as ApplicationStatus
+    return await this.Repo.save(application);
   }
 }

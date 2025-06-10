@@ -19,7 +19,14 @@ export class MajorsService {
   }
 
   async findAll(): Promise<Major[]> {
-    return this.Repo.find();
+    return this.Repo.find({
+      relations: {
+        school: true,
+        combinations: {
+          combination: true, // Lấy luôn cả danh sách môn học trong từng tổ hợp
+        }, // Lấy  tin trường và tổ hợp môn liên quan
+      },
+    });
   }
 
   async findOne(id: number): Promise<Major> {

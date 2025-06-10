@@ -17,12 +17,12 @@ export class Major {
   @Column()
   name: string;
 
-  @ManyToOne(() => School, (school) => school.majors)
+  @ManyToOne(() => School, school => school.majors)
   school: School;
 
-  @OneToMany(() => MajorCombination, (mc) => mc.major)
+  @OneToMany(() => MajorCombination, mc => mc.major)
   combinations: MajorCombination[];
 
-  @OneToMany(() => Application, (app) => app.major)
+  @OneToMany(() => Application, app => app.major)
   applications: Application[];
 }
